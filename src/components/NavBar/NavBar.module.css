@@ -1,0 +1,17 @@
+.nav_bar{
+    /* or any other color */
+
+    width: 100vw;
+    padding: 10px;
+    min-height: 2rem;
+    box-sizing: border-box;
+    font-family: "Rubic";
+
+}
+.clock{
+    font-family: Rubik, Courier;
+    font-size: 2rem;
+    color: whitesmoke;
+
+}
+
