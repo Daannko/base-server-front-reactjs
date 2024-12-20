@@ -1,5 +1,5 @@
 import styles from './Auth.module.css'
-import { withSnackbar, VariantType, ProviderContext } from "../../components/CustomSnackBar/NotistackSnackBar";
+import { useSnackbar, VariantType } from "notistack";
 import React, { useState, useEffect } from 'react';
 
 function AuthPage(){
@@ -10,6 +10,8 @@ function AuthPage(){
     const [username, setUsername] = useState('')
     const [emailError, setEmailError] = useState('')
     const [passwordError, setPasswordError] = useState('')
+    
+    const { enqueueSnackbar } = useSnackbar();
     
     const [isLogin, setIsLogin] = useState(() => {
         const savedState = localStorage.getItem('isLogin');
@@ -36,24 +38,17 @@ function AuthPage(){
           })
 
           if (response.ok) {
-            setIsLogin(!isLogin && true )
+            enqueueSnackbar("Successfuly loged in!" ,{variant: "success"})
+            if(!isLogin) setIsLogin(true)
             console.log("We good!")
             console.log(response)
 
           } else {
             const errorData = await response.json(); 
-            console.error('Error:', errorData.message);  
+            enqueueSnackbar(errorData.message ,{variant: "warning"})
           }
     }
 
-      const handleButtonClick = () => {
-        const snackTypes = ["success", "info", "warning", "error"];
-        const randomType = snackTypes[Math.floor(Math.random() * snackTypes.length)];
-        this.props.enqueueSnackbar(`Current type: ${randomType}, button clicked`, {
-          variant: randomType
-        });
-      };
-      
 
     useEffect(() => {
         // Sync the isLogin state with localStorage when it changes
@@ -74,7 +69,7 @@ function AuthPage(){
                     <input type="email" name="email" className={styles.textInput} autoFocus={ isLogin ? true : false} required={true} value={email} placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
                     <input type="password"  name="password" className={styles.textInput} required={true} value={password} placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
                     <input type="password"  name="password" className={ isLogin ? styles.hidden :  styles.textInput } required={true} value={confirmPassword} placeholder="Confirm Password" onChange={(e) => setConfirmPassword(e.target.value)} />
-                    <input type="submit" onClick={handleButtonClick} className={styles.glassButton} name="Submit" value={isLogin ? "Login" : "Register"}  />
+                    <input type="submit" onClick={handleAuth} className={styles.glassButton} name="Submit" value={isLogin ? "Login" : "Register"}  />
                     <span className={styles.authSwitch} onClick={toggleForm}>{isLogin ? "Sign up" : "Sign in"}</span>
                 </div>
             </div>
