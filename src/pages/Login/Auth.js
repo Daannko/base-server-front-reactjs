@@ -1,6 +1,8 @@
+
 import styles from './Auth.module.css'
-import { useSnackbar, VariantType } from "notistack";
+import { useSnackbar} from "notistack";
 import React, { useState, useEffect } from 'react';
+import axiosInstance from '../../interceptors/AuthInterceptor'; 
 
 function AuthPage(){
 
@@ -8,19 +10,17 @@ function AuthPage(){
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [username, setUsername] = useState('')
-    const [emailError, setEmailError] = useState('')
-    const [passwordError, setPasswordError] = useState('')
     
     const { enqueueSnackbar } = useSnackbar();
     
     const [isLogin, setIsLogin] = useState(() => {
         const savedState = localStorage.getItem('isLogin');
-        return savedState ? JSON.parse(savedState) : true; // Default to login if no value is stored
+        return savedState ? JSON.parse(savedState) : true; 
       });
 
     async function handleAuth(){ 
 
-        const url = "http://localhost:8080/auth/" + (isLogin ? "login" : "register");
+        const url = (isLogin ? "/auth/login" : "/auth/register");
         const body = {
             email: email,
             password: password,
@@ -28,36 +28,31 @@ function AuthPage(){
         if(isLogin){
             body["name"] = username;
         }
-        const response = await fetch(url, {
-            method: 'POST',
+        const request = await axiosInstance.post(url, JSON.stringify(body),{
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(body)
-          })
-
-          if (response.ok) {
-            enqueueSnackbar("Successfuly loged in!" ,{variant: "success"})
-            if(!isLogin) setIsLogin(true)
-
-          } else {
-            const errorData = await response.json(); 
-            enqueueSnackbar(errorData.message ,{variant: "warning"})
-          }
+            })
+            .catch( (error) => {
+                enqueueSnackbar(error.response.data.message ,{variant: "warning"})
+            })
+            
+        if (request && request.status === 204) {
+        enqueueSnackbar("Successfuly loged in!" ,{variant: "success"})
+        if(!isLogin) setIsLogin(true)
+        } 
+        
     }
 
-
     useEffect(() => {
-        // Sync the isLogin state with localStorage when it changes
         localStorage.setItem('isLogin', JSON.stringify(isLogin));
       }, [isLogin]);
 
     const toggleForm = () => {
-        setIsLogin((prevState) => !prevState); // Toggle between login and register
-      };
+        setIsLogin((prevState) => !prevState); 
+    };
     
-
     return( 
         <div className={styles.authPage}>
             <div className={styles.authWindow}>   
