@@ -3,7 +3,7 @@ import styles from "./DigitalClock.module.css"
 
 function DigitalClock(){
 
-    const [time,setTime] = useState(new Date);
+    const [time,setTime] = useState(new Date());
 
     useEffect(() => {
         const intervalId = setInterval(()=>{
@@ -36,4 +36,4 @@ function DigitalClock(){
 }
 
 
-export default DigitalClock
+export default DigitalClock;

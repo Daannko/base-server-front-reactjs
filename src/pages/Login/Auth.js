@@ -40,8 +40,6 @@ function AuthPage(){
           if (response.ok) {
             enqueueSnackbar("Successfuly loged in!" ,{variant: "success"})
             if(!isLogin) setIsLogin(true)
-            console.log("We good!")
-            console.log(response)
 
           } else {
             const errorData = await response.json(); 

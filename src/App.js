@@ -1,17 +1,26 @@
+import React from 'react';
 import NavBar from './components/NavBar/NavBar';
 import "@fontsource/rubik";
-import styles from './App.css'
+import styles from './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AuthPage from './pages/Login/Auth';
-import NotistackWrapper from './components/CustomSnackBar/NotistackSnackBar'
+import NotistackWrapper from './components/CustomSnackBar/NotistackSnackBar';
+import Dashboard from './pages/Dashboard/DashBoard';
+import Home from './pages/Home/Home';
+
 function App() {
   return (
     <NotistackWrapper>
-    <div className={styles.app}>
-        <NavBar/>
-        <AuthPage/>
-    </div>
+      <NavBar />
+      
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/auth" element={<AuthPage />} />
+        </Routes>
+      </Router>
     </NotistackWrapper>
-
   );
 }
 
