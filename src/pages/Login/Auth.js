@@ -45,6 +45,26 @@ function AuthPage(){
         
     }
 
+    //TODO: remove in future
+    // async function handle(){ 
+    //     const request = await axiosInstance.get("/",{
+    //         headers: {
+    //           'Accept': 'application/json',
+    //           'Content-Type': 'application/json',
+    //         },
+    //         })
+    //         .catch( (error) => {
+    //             enqueueSnackbar(error.response.data.message ,{variant: "warning"})
+    //         })
+    //         debugger;
+            
+    //     if (request && request.status === 204) {
+    //     enqueueSnackbar("Successfuly loged in!" ,{variant: "success"})
+    //     if(!isLogin) setIsLogin(true)
+    //     } 
+        
+    // }
+
     useEffect(() => {
         localStorage.setItem('isLogin', JSON.stringify(isLogin));
       }, [isLogin]);

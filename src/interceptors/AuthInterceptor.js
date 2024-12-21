@@ -1,15 +1,15 @@
 import axios from 'axios';
-
+import { useSnackbar} from "notistack";
 // Create an Axios instance
 
-
+const BASE_URL = 'http://localhost:8080'
 
 
 // src/axiosInstance.js
 
 // Create an Axios instance
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8080',  // Replace with your backend URL
+  baseURL: BASE_URL,  // Replace with your backend URL
 });
 
 // Add request interceptor to automatically set withCredentials to true
@@ -18,10 +18,33 @@ axiosInstance.interceptors.request.use(
     config.withCredentials = true;
     return config;
   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
+  (error) => {
+    return Promise.reject(error);
+  }
 );
+
+axiosInstance.interceptors.response.use(
+    response => response, 
+    async error => {
+        debugger
+        const originalRequest = error.config;
+        if((error.request.responseURL).includes("/auth/login")) return Promise.reject(error);
+        if ((error.response.status === 462 || error.response.status === 401) && !originalRequest._retry) {
+          originalRequest._retry = true; // Mark the request as retried to avoid infinite loops.
+          try {
+                    debugger;
+            await axios.get(BASE_URL + "/auth/refresh", {withCredentials: true});
+            return axiosInstance(originalRequest); // Retry the original request with the new access token.
+          } catch (refreshError) {
+            const { enqueueSnackbar } = useSnackbar();
+            enqueueSnackbar("Failed to refresh session!",{variant:"error"})
+            window.location.href = '/logout';
+            return Promise.reject(refreshError);
+          }
+        }
+        return Promise.reject(error); // For all other errors, return the error as is.
+      }
+  );
 
 export default axiosInstance;
 
