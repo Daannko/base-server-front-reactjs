@@ -3,16 +3,18 @@ import styles from './Auth.module.css'
 import { useSnackbar} from "notistack";
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../interceptors/AuthInterceptor'; 
+import { useNavigate } from 'react-router-dom';
+import userService from '../../services/UserService';
 
 function AuthPage(){
+
+    const nav = useNavigate();    
+    const { enqueueSnackbar } = useSnackbar();
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
-    const [username, setUsername] = useState('')
-    
-    const { enqueueSnackbar } = useSnackbar();
-    
+    const [username, setUsername] = useState('')    
     const [isLogin, setIsLogin] = useState(() => {
         const savedState = localStorage.getItem('isLogin');
         return savedState ? JSON.parse(savedState) : true; 
@@ -28,6 +30,7 @@ function AuthPage(){
         if(isLogin){
             body["name"] = username;
         }
+
         const request = await axiosInstance.post(url, JSON.stringify(body),{
             headers: {
               'Accept': 'application/json',
@@ -35,15 +38,31 @@ function AuthPage(){
             },
             })
             .catch( (error) => {
+               if(!error.response){
+                enqueueSnackbar("Could not connect to server",{variant: "warning"})
+               }
+               else{
                 enqueueSnackbar(error.response.data.message ,{variant: "warning"})
+               }
+               
             })
             
         if (request && request.status === 204) {
-        enqueueSnackbar("Successfuly loged in!" ,{variant: "success"})
-        if(!isLogin) setIsLogin(true)
+            if(isLogin) {
+                userService.fetchUserData().finally( () => {
+                    debugger
+                    enqueueSnackbar("Successfuly loged in!" ,{variant: "success"})
+                    nav('/')
+                })
+            }
+            else{
+                enqueueSnackbar("Successfuly created an account!" ,{variant: "success"})
+                setIsLogin(true)
+            }
         } 
-        
+    
     }
+
 
     //TODO: remove in future
     // async function handle(){ 

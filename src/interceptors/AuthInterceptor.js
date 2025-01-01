@@ -26,7 +26,6 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
     response => response, 
     async error => {
-        debugger
         const originalRequest = error.config;
         if((error.request.responseURL).includes("/auth/login")) return Promise.reject(error);
         if ((error.response.status === 462 || error.response.status === 401) && !originalRequest._retry) {
