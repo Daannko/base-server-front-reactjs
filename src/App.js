@@ -8,6 +8,8 @@ import NotistackWrapper from './components/CustomSnackBar/NotistackSnackBar';
 import Dashboard from './pages/Dashboard/DashBoard';
 import Home from './pages/Home/Home';
 import { initializeSessionStorageSync } from './helpers/SyncSessionStorage';
+import GoogleCallbackRedirect from './pages/GoogleCallback/GoogleCallbackRedirect';
+import { NavbarProvider } from './helpers/NavbarProvider';
 
 function App() {
 
@@ -24,17 +26,19 @@ function App() {
   }, []);
 
   return (
-    <NotistackWrapper>
-      <NavBar />
-      
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/auth" element={<AuthPage />} />
-        </Routes>
-      </Router>
-    </NotistackWrapper>
+    <NavbarProvider>
+      <NotistackWrapper>
+        <NavBar />
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/auth/google/callback" element={<GoogleCallbackRedirect />} />
+          </Routes>
+        </Router>
+      </NotistackWrapper>
+    </NavbarProvider>
   );
 }
 

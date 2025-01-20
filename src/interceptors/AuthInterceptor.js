@@ -27,11 +27,11 @@ axiosInstance.interceptors.response.use(
     response => response, 
     async error => {
         const originalRequest = error.config;
+
         if((error.request.responseURL).includes("/auth/login")) return Promise.reject(error);
-        if ((error.response.status === 462 || error.response.status === 401) && !originalRequest._retry) {
+        if ((error.response.status === 462 || error.response.status === 401 || error.response.status === 403) && !originalRequest._retry) {
           originalRequest._retry = true; // Mark the request as retried to avoid infinite loops.
           try {
-                    debugger;
             await axios.get(BASE_URL + "/auth/refresh", {withCredentials: true});
             return axiosInstance(originalRequest); // Retry the original request with the new access token.
           } catch (refreshError) {

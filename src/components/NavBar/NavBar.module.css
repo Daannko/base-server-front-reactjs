@@ -2,16 +2,26 @@
     /* or any other color */
 
     width: 100vw;
-    padding: 10px;
-    min-height: 2rem;
+    padding-left: 1rem;
+    margin-top: 0.5rem;
+    height: 2.5rem;
     box-sizing: border-box;
     font-family: "Rubic";
+    
 
 }
 .clock{
     font-family: Rubik, Courier;
     font-size: 2rem;
     color: whitesmoke;
+}
+.hiddenClock{
+    font-family: Rubik, Courier;
+    font-size: 2rem;
+    color: transparent;
+}
 
+.hide{
+    opacity: 0;
 }
 

@@ -13,6 +13,11 @@ class UserService{
         return storageService.saveUser(result.status !== 200 ? null : result.data)
     }
 
+    async fetchUserToDos() {
+        const path = '/todo'
+        return await axiosInstance.get(path).catch((error) => error)
+    }
+
 
 
 }
