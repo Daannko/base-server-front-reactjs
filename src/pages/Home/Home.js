@@ -9,6 +9,7 @@ import taskService from "../../services/TaskService";
 import GoogleLogin from "../../components/GoogleLogin";
 import { useRef } from "react";
 import { useNavbar } from "../../helpers/NavbarProvider";
+import googleAPIScopesService from "../../services/GoogleAPIScopesService";
 
 
 function Home(){
@@ -81,7 +82,7 @@ function Home(){
         <AddToDoModal openModal={openModal} setOpenModal={setOpenModal} addTodo={addTodo}/>
         <div className={styles.clock} ref={clockRef}><DigitalClock/></div>
         <div className={styles.features} >
-            <GoogleLogin></GoogleLogin>
+            <GoogleLogin scopes={googleAPIScopesService.getFullCalendarScopes()} ></GoogleLogin>
         </div>
         <div className={styles.features} >
             <p>Events & Tasks</p>

@@ -3,15 +3,19 @@ import axiosInstance from '../../interceptors/AuthInterceptor'; // Assuming you 
 import styles from './GoogleCallbackRedirect.module.css'
 const GoogleCallbackRedirect = () => {
   useEffect(() => {
-    const getTokens = async () => {
+    const sendGoogleOAuth2Code = async () => {
       try {
         // Send request to the backend to exchange the code for tokens
-        const response = await axiosInstance.get('http://localhost:8080/google/callback', {
-          params: {
-            code: new URLSearchParams(window.location.search).get('code'), // Extract code from the URL
-          },
-        });
-
+        const code = new URLSearchParams(window.location.search).get('code'); 
+        const scopes = new URLSearchParams(window.location.search).get('scope').split(" "); 
+        debugger// Extract the code from the URL
+        // Prepare the request body with code and scopes
+        const requestBody = {
+          code,
+          scopes // Add the scopes array to the body
+        };
+    
+        const response = await axiosInstance.post('http://localhost:8080/google/callback', requestBody);
         console.log('Response from backend:', response.data);
         window.close(); // Close the OAuth window
         } catch (error) {
@@ -20,7 +24,7 @@ const GoogleCallbackRedirect = () => {
     };
 
     // Call the function to get the tokens
-    getTokens();
+    sendGoogleOAuth2Code();
   }, []);
 
   return (
